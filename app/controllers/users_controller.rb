@@ -8,10 +8,10 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params) 
+    @user = User.new(user_params)   # 実装は終わっていないことに注意!
     if @user.save
+      log_in @user
       redirect_to @user
-      # 保存の成功をここで扱う。
     else
       render 'new'
     end
