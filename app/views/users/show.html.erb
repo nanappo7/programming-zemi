@@ -1,44 +1,50 @@
 <div class="row">
     <aside class="col-md-4">
         <section class="user_info">
-            <h1><%= @user.name %></h1>
-            <p><%= link_to "プロフィールを見る", @user %></p>
-            <p><b>ツイート:</b> <%= @user.tweets.count %></p>
-        </section>
-        <section class="stats">
-            <div class="stats">
-                <a href="<%= following_user_path(@user) %>">
-                    <strong id="follower" class="stat">
-                    <%= @user.follower.count %>
-                    </strong>
-                    フォロー
-                </a>
-                <a href="<%= followers_user_path(@user) %>">
-                    <strong id="followed" class="stat">
-                    <%= @user.followed.count %>
-                    </strong>
-                    フォロワー
-                </a>
-            </div>
-            <% if @users.any? %>
-            <div class="user_avatars">
-                <% @users.each do |user| %>
+            <h1>
+            <%= @user.name %>
+            </h1>
+            <p>
+                <% if current_user != @user %>
+                    <% if current_user.following?(@user) %>
+                        <%= link_to 'フォロー解除', unfollow_path(@user.id), method: :POST %>
+                    <% else %>
+                        <%= link_to 'フォローする', follow_path(@user.id), method: :POST %>
+                    <% end %>
                 <% end %>
-            </div>
-            <% end %>
+            </p>
+        </section>
+        <section>
+        <div class="stats">
+            <a href="<%= following_user_path(@user) %>">
+                <strong id="follower" class="stat">
+                <%= @user.follower.count %>
+                </strong>
+                フォロー
+            </a>
+            <a href="<%= followers_user_path(@user) %>">
+                <strong id="followed" class="stat">
+                <%= @user.followed.count %>
+                </strong>
+                フォロワー
+            </a>
+        </div>
         </section>
     </aside>
     <div class="col-md-8">
-        <h3><%= @title %></h3>
-        <% if @users.any? %>
-            <ul class="users follow">
-                <% @users.each do |user| %>
-                    <li id="tweet-<%= user.id %>">
-                        <span class="user"><%=  user.name %></span>
-                    </li>
-                <% end %>
-            </ul>
-            <%= will_paginate %>
-        <% end %>
+    <% if @user.tweets.any? %>
+        <h3>ツイート (<%= @user.tweets.count %>)</h3>
+        <ol class="tweets">
+            <% @tweets.each do |tweet| %>
+                <li id="tweet-<%= tweet.id %>">
+                    <span class="user"><%= link_to tweet.user.name, tweet.user %></span>
+                    <span class="content"><%= tweet.content %></span>
+                    <span class="timestamp">
+                        投稿日 <%= time_ago_in_words(tweet.created_at) %> 前
+                    </span>
+                </li>
+            <% end %>
+        </ol>
+    <% end %>
     </div>
 </div>
