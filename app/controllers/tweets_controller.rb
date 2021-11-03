@@ -32,6 +32,12 @@ class TweetsController < ApplicationController
       redirect_to request.referrer || root_url
   end
 
+  def hashtag
+    @user = current_user
+    @tag = Hashtag.find_by(hashname: params[:name])
+    @tweets = @tag.tweets
+  end
+
   private
 
       def tweet_params

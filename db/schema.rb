@@ -10,13 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_19_064357) do
+ActiveRecord::Schema.define(version: 2021_11_03_035329) do
+
+  create_table "hashtags", force: :cascade do |t|
+    t.string "hashname"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index [nil], name: "index_hashtags_on_hashmame", unique: true
+  end
 
   create_table "relationships", force: :cascade do |t|
     t.integer "follower_id"
     t.integer "followed_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "tweet_hashtag_relations", force: :cascade do |t|
+    t.integer "tweet_id"
+    t.integer "hashtag_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hashtag_id"], name: "index_tweet_hashtag_relations_on_hashtag_id"
+    t.index ["tweet_id"], name: "index_tweet_hashtag_relations_on_tweet_id"
   end
 
   create_table "tweets", force: :cascade do |t|
